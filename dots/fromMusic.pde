@@ -19,17 +19,17 @@ import ddf.minim.*;
 Minim analyzer;
 FFT fft;
 
-float startAutoTime = 16.5;
-
 LinearFunctional bottom;
 LinearFunctional second;
 LinearFunctional middle;
 LinearFunctional high;
 
 // This programmatically generates effects from the music
-void createEffectsFromMusic(String filename) {
+void createEffectsFromMusic(String filename, float startTime) {
   // Just for counting how many we added
   int startEffects = effects.size();
+  
+  float startAutoTime = startTime;
 
   // Load the left channel of the audio (should probably combine both channels)
   analyzer = new Minim(this);

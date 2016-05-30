@@ -27,20 +27,24 @@ VideoExport videoExport;
 boolean display = false;
 // Export means that it'll export to an .mp4 file
 boolean export = false;
+// The filename of the input music file
+String musicFileName = 'bubbles.mp3';
+// The time when we start creating effects from the FFT
+float fftEffectGenerationStart = 16.5;
 // Export framerate
 float myFrameRate = 60;
 
 ArrayList<Dot> dots;
 ArrayList<Effect> effects;
 
-// Screen setup (remember to update this on the second line of setup()) as
-// well... for some reason it won't let me use variables in it
-int cW = 600;
-int cH = 400;
+// Screen setup (remember to update this on the second line of setup() as
+// well... for some reason it won't let me use variables in it)
+int cW = 1000;
+int cH = 600;
 
 // Settings for automatically generated dots
 float maxRadius = 30;
-float minRadius = 1;
+float minRadius = 3;
 
 // Timing
 float time = 0;
@@ -54,9 +58,9 @@ String exportName() {
 
 void setup() {
   // 'cos we want determinacy
-  randomSeed(0);
+  randomSeed(1);
 
-  size(600, 400);
+  size(1000, 600);
   dots = new ArrayList<Dot>();
   dots.clear();
 
@@ -76,7 +80,7 @@ void setup() {
     // First 15 seconds, see bubbles.pde
     Bubbles(0);
     // The rest, see fromMusic.pde
-    createEffectsFromMusic("bubbles.mp3");
+    createEffectsFromMusic(musicFileName, fftEffectGenerationStart);
   }
 
   // If we are exporting, setup export
@@ -93,8 +97,9 @@ void setup() {
   // !export because that's not realtime
   if (!export && display) {
     minim = new Minim(this);
-    player = minim.loadFile("bubbles.mp3", 2048);
+    player = minim.loadFile(musicFileName, 2048);
     startMillis = millis();
+    player.play();
   }
 }
 

@@ -1,4 +1,5 @@
 *.mp3
 *.mp4
+*.mp4.txt
 .DS_Store
 dots/ffmpeg

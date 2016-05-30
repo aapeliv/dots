@@ -39,8 +39,12 @@ void Bubbles(float t) {
     {6.279, 0.500, 0.05},
     {6.579, 0.400, 0.07}};
 
+  // Pick random point to have this effect at
+  float x1 = random(0.1 * cW, 0.9 * cW);
+  float y1 = random(0.1 * cH, 0.9 * cH);
+  
   for (int i = 0; i < firstBounces.length; i++) {
-    effects.add(new SmallDotsFlashRipple(t + firstBounces[i][0], cW - 200, cH - 312, firstBounces[i][2] * 20, firstBounces[i][2] * 10, 50, 25, maxRadius, minRadius));
+    effects.add(new SmallDotsFlashRipple(t + firstBounces[i][0], x1, y1, firstBounces[i][2] * 20, firstBounces[i][2] * 10, 50, 25, maxRadius, minRadius));
   }
 
   float[][] secondBounces =
@@ -57,13 +61,19 @@ void Bubbles(float t) {
     {9.703, 0.108},
     {9.925, 0.087}};
 
+  float x2 = random(0.1 * cW, 0.9 * cW);
+  float y2 = random(0.1 * cH, 0.9 * cH);
+  
   for (int i = 0; i < secondBounces.length; i++) {
-    effects.add(new SmallDotsFlashRipple(t + secondBounces[i][0], 650, 410, - secondBounces[i][1] * 20, secondBounces[i][1] * 50, 100, 125, 1.2 * maxRadius, minRadius));
-    effects.add(new RetractCircle(t + secondBounces[i][0], 650, 410, 2, secondBounces[i][1], secondBounces[i][1] * 2));
+    effects.add(new SmallDotsFlashRipple(t + secondBounces[i][0], x2, y2, - secondBounces[i][1] * 20, secondBounces[i][1] * 50, 100, 125, 1.2 * maxRadius, minRadius));
+    effects.add(new RetractCircle(t + secondBounces[i][0], x2, y2, 2, secondBounces[i][1], secondBounces[i][1] * 2));
   }
 
-  effects.add(new BigBallsContractRipple(t + 10, 400, 200, 0.4, 100, 100, 500, maxRadius, minRadius));
-  effects.add(new SmallDotsFlashRipple(t + 10, 400, 200, 2, 100, 100, 500, maxRadius, minRadius));
+  float x3 = random(0.1 * cW, 0.9 * cW);
+  float y3 = random(0.1 * cH, 0.9 * cH);
+
+  effects.add(new BigBallsContractRipple(t + 10, x3, y3, 0.4, 100, 100, 500, maxRadius, minRadius));
+  effects.add(new SmallDotsFlashRipple(t + 10, x3, y3, 2, 100, 100, 500, maxRadius, minRadius));
 
   float[][] thirdBounces =
     {{10.670, 0.204},
@@ -79,9 +89,12 @@ void Bubbles(float t) {
     {12.955, 0.010},
     {13.020, 0.010}};
 
+  float x4 = random(0.1 * cW, 0.9 * cW);
+  float y4 = random(0.1 * cH, 0.9 * cH);
+  
   for (int i = 0; i < thirdBounces.length; i++) {
-    effects.add(new SmallDotsFlashRipple(t + thirdBounces[i][0], 600, 800, - thirdBounces[i][1] * 30, thirdBounces[i][1] * 100, 100, 80, 1.2 * maxRadius, minRadius));
-    effects.add(new RetractCircle(t + thirdBounces[i][0], 600, 800, 2, thirdBounces[i][1], thirdBounces[i][1] * 2));
+    effects.add(new SmallDotsFlashRipple(t + thirdBounces[i][0], x4, y4, - thirdBounces[i][1] * 30, thirdBounces[i][1] * 100, 100, 80, 1.2 * maxRadius, minRadius));
+    effects.add(new RetractCircle(t + thirdBounces[i][0], x4, y4, 2, thirdBounces[i][1], thirdBounces[i][1] * 2));
   }
 
   float[][] fourthSound =
@@ -94,8 +107,11 @@ void Bubbles(float t) {
     {14.957, 0.003},
     {14.984, 0.002}};
 
+  float x5 = random(0.1 * cW, 0.9 * cW);
+  float y5 = random(0.1 * cH, 0.9 * cH);
+  
   for (int i = 0; i < fourthSound.length; i++) {
-    effects.add(new SmallDotsFlashRipple(t + fourthSound[i][0], cW - 300, 700, fourthSound[i][1] * 10, 100, 400, 500, maxRadius, minRadius));
+    effects.add(new SmallDotsFlashRipple(t + fourthSound[i][0], x5, y5, fourthSound[i][1] * 10, 100, 400, 500, maxRadius, minRadius));
   }
 
   print("Added " + (effects.size() - startEffects) + " effects.\n");
