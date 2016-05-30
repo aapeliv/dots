@@ -1,20 +1,33 @@
+/* Copyright (C) 2016  Aapeli Vuorinen
 
-float someRandomCorrectionFactor = 1;
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
 
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>. */
+
+// This effect just makes everything white after the specified time.
 class DebugEffect extends Effect {
   float t;
-  
+
   DebugEffect(float tS) {
     super(tS, 0);
     t = tS;
   }
-  
+
   Dot Apply(float tt, Dot dot) {
     return (tt > t) ? new Dot(dot.x, dot.y, dot.r, 1, 1, 1) : dot;
   }
 }
 
-// Fades out small dots
+// Fades out small dots proportional to their radius to the maximum radius
 class MainEffect extends Effect {
   float maxRadius;
 
@@ -29,13 +42,18 @@ class MainEffect extends Effect {
   }
 }
 
+// Tints the colors
 class Tint extends Effect {
+  // r, g, b are red, green, blue
+  // S = start
+  // E = end
   float rS, rE, gS, gE, bS, bE;
 
   Tint(float rSS, float rES, float gSS, float gES, float bSS, float bES) {
+    // Always active
     super(0, 0);
-    rS = rSS; 
-    rE = rES; 
+    rS = rSS;
+    rE = rES;
     gS = gSS;
     gE = gES;
     bS = bSS;
@@ -43,16 +61,18 @@ class Tint extends Effect {
   }
 
   Dot Apply(float t, Dot dot) {
+    // See SmoothTransition
     return new Dot(dot.x, dot.y, dot.r, rS + SmoothTransition(dot.red) * (rE - rS), gS + SmoothTransition(dot.green) * (gE - gS), bS + SmoothTransition(dot.blue) * (bE - bS));
   }
 }
 
+// This makes the Dot become smaller and then bigger again
 class Retract extends Effect {
   float time, duration, factor;
 
   Retract(float timeS, float durationS, float factorS) {
     super(timeS, timeS + durationS);
-    time = timeS; 
+    time = timeS;
     duration = durationS;
     factor = factorS;
   }
@@ -62,14 +82,15 @@ class Retract extends Effect {
   }
 }
 
+// Same as Retract but only applies in a circle of radius r around (x,y)
 class RetractCircle extends Effect {
   float time, x, y, r, duration, factor;
 
   RetractCircle(float timeS, float xS, float yS, float rS, float durationS, float factorS) {
     super(timeS, timeS + durationS);
-    time = timeS; 
-    x = xS; 
-    y = yS; 
+    time = timeS;
+    x = xS;
+    y = yS;
     r = rS;
     duration = durationS;
     factor = factorS;
@@ -84,6 +105,7 @@ class RetractCircle extends Effect {
   }
 }
 
+// This creates a kind of "magnification" effect
 class Parallax extends Effect {
   float factor, xC, yC, viewRadius;
 
@@ -109,6 +131,7 @@ class Parallax extends Effect {
   }
 }
 
+// This was a testing Effect, makes everythign jiggle
 class StationaryWave extends Effect {
   StationaryWave() {
     super(0, 0);
@@ -119,26 +142,22 @@ class StationaryWave extends Effect {
   }
 }
 
-/*class Wave extends Effect {
- float time, angle, xS, yS, frontSize, speed;
- 
- 
- }*/
-
-// Ripple peffect template
+// This is the basic template for most effects used in the actual video. It just
+// computes an intensity factor based on an expanding circle eminating (x,y)
+// with a certain size, speed and "fatness" (frontSize).
 class Ripple extends Effect {
   float time, x, y, intensity, frontSize, size, speed;
   Ripple(float timeS, float xS, float yS, float intensityS, float frontSizeS, float sizeS, float speedS) {
     super(timeS, timeS + exp(sizeS / speedS));
-    time = timeS; 
-    x = xS; 
-    y = yS; 
+    time = timeS;
+    x = xS;
+    y = yS;
     intensity = intensityS;
     frontSize = frontSizeS;
     size = sizeS;
     speed = speedS;
   }
-  
+
   float ComputePropIntensity(float t, Dot dot) {
     if (t < time) {
       return 0;
@@ -147,7 +166,7 @@ class Ripple extends Effect {
       float d = dot.Dist(x, y);
       float distToFront = d - currentRadius;
       float sizeFactor = exp(-currentRadius / size);
-      return SmoothSymmetricBump(distToFront / frontSize) * sizeFactor * someRandomCorrectionFactor;
+      return SmoothSymmetricBump(distToFront / frontSize) * sizeFactor;
     }
   }
 }
@@ -192,7 +211,7 @@ class FlashRipple extends Ripple {
 // Makes only smaller dots brighter in a ripple effect thing
 class SmallDotsFlashRipple extends Ripple {
   float maxRadius, minRadius;
-  
+
   SmallDotsFlashRipple(float timeS, float xS, float yS, float intensityS, float frontSizeS, float sizeS, float speedS, float maxRadiusS, float minRadiusS) {
     super(timeS, xS, yS, intensityS, frontSizeS, sizeS, speedS);
     maxRadius = maxRadiusS;
@@ -225,7 +244,7 @@ class SmallDotsFlashBottom extends Effect {
 
   SmallDotsFlashBottom(float timeS, float intensityS, float frontSizeS, float sizeS, float speedS, float maxRadiusS, float minRadiusS, float x) {
     super(timeS, timeS + sizeS / speedS);
-    time = timeS; 
+    time = timeS;
     intensity = intensityS;
     frontSize = frontSizeS;
     size = sizeS;
